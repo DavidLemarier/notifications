@@ -6,7 +6,7 @@ describe 'CommandLogger', ->
   [element, logger] = []
 
   dispatch = (command) ->
-    atom.commands.dispatch(element, command)
+    soldat.commands.dispatch(element, command)
 
   beforeEach ->
     element = document.createElement("section")

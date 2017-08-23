@@ -6,6 +6,6 @@
 # the root workspace element.
 
 # For more detailed documentation see
-# https://atom.io/docs/latest/advanced/keymaps
-'atom-workspace':
+# https://soldat.io/docs/latest/advanced/keymaps
+'soldat-workspace':
   'cmd-alt-t': 'notifications:trigger-error'

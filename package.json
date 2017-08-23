@@ -1,12 +1,12 @@
 {
   "name": "notifications",
   "main": "./lib/main",
-  "version": "0.68.0",
+  "version": "0.0.1",
   "description": "A tidy way to display Atom notifications.",
-  "repository": "https://github.com/atom/notifications",
+  "repository": "https://github.com/DavidLemarier/notifications",
   "license": "MIT",
   "engines": {
-    "atom": ">0.50.0"
+    "soldat": ">0.50.0"
   },
   "dependencies": {
     "fs-plus": "^3.0.0",

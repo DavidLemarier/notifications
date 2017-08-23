@@ -33,7 +33,7 @@ class CommandLogger
     @initLog()
 
   start: ->
-    atom.commands.onWillDispatch (event) =>
+    soldat.commands.onWillDispatch (event) =>
       @logCommand(event)
 
   # Public: Formats the command log for the bug report.

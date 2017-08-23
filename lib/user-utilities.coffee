@@ -2,7 +2,7 @@ os = require 'os'
 fs = require 'fs'
 path = require 'path'
 semver = require 'semver'
-{BufferedProcess} = require 'atom'
+{BufferedProcess} = require 'soldat'
 
 ###
 A collection of methods for retrieving information about the user's system for
@@ -99,8 +99,8 @@ module.exports =
 
   getNonCorePackages: ->
     new Promise (resolve, reject) ->
-      nonCorePackages = atom.packages.getAvailablePackageMetadata().filter((p) -> not atom.packages.isBundledPackage(p.name))
-      devPackageNames = atom.packages.getAvailablePackagePaths().filter((p) -> p.includes(DEV_PACKAGE_PATH)).map((p) -> path.basename(p))
+      nonCorePackages = soldat.packages.getAvailablePackageMetadata().filter((p) -> not soldat.packages.isBundledPackage(p.name))
+      devPackageNames = soldat.packages.getAvailablePackagePaths().filter((p) -> p.includes(DEV_PACKAGE_PATH)).map((p) -> path.basename(p))
       resolve("#{pack.name} #{pack.version} #{if pack.name in devPackageNames then '(dev)' else ''}" for pack in nonCorePackages)
 
   getLatestAtomData: ->
@@ -108,29 +108,29 @@ module.exports =
       accept: 'application/vnd.github.v3+json',
       contentType: "application/json"
     })
-    fetch 'https://atom.io/api/updates', {headers: githubHeaders}
+    fetch 'https://soldat.io/api/updates', {headers: githubHeaders}
       .then (r) -> if r.ok then r.json() else Promise.reject r.statusCode
 
   checkAtomUpToDate: ->
     @getLatestAtomData().then (latestAtomData) ->
-      installedVersion = atom.getVersion()?.replace(/-.*$/, '')
+      installedVersion = soldat.getVersion()?.replace(/-.*$/, '')
       latestVersion = latestAtomData.name
       upToDate = installedVersion? and semver.gte(installedVersion, latestVersion)
       {upToDate, latestVersion, installedVersion}
 
   getPackageVersion: (packageName) ->
-    pack = atom.packages.getLoadedPackage(packageName)
+    pack = soldat.packages.getLoadedPackage(packageName)
     pack?.metadata.version
 
   getPackageVersionShippedWithAtom: (packageName) ->
-    require(path.join(atom.getLoadSettings().resourcePath, 'package.json')).packageDependencies[packageName]
+    require(path.join(soldat.getLoadSettings().resourcePath, 'package.json')).packageDependencies[packageName]
 
   getLatestPackageData: (packageName) ->
     githubHeaders = new Headers({
       accept: 'application/vnd.github.v3+json',
       contentType: "application/json"
     })
-    fetch "https://atom.io/api/packages/#{packageName}", {headers: githubHeaders}
+    fetch "https://soldat.io/api/packages/#{packageName}", {headers: githubHeaders}
       .then (r) -> if r.ok then r.json() else Promise.reject r.statusCode
 
   checkPackageUpToDate: (packageName) ->

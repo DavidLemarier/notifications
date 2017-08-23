@@ -15,7 +15,7 @@ class NotificationIssue
 
   findSimilarIssues: ->
     repoUrl = @getRepoUrl()
-    repoUrl = 'atom/atom' unless repoUrl?
+    repoUrl = 'soldat/soldat' unless repoUrl?
     repo = repoUrl.replace /http(s)?:\/\/(\d+\.)?github.com\//gi, ''
     issueTitle = @getIssueTitle()
     query = "#{issueTitle} repo:#{repo}"
@@ -53,7 +53,7 @@ class NotificationIssue
   getIssueUrl: ->
     @getIssueBody().then (issueBody) =>
       repoUrl = @getRepoUrl()
-      repoUrl = 'https://github.com/atom/atom' unless repoUrl?
+      repoUrl = 'https://github.com/soldat/soldat' unless repoUrl?
       "#{repoUrl}/issues/new?title=#{@encodeURI(@getIssueTitle())}&body=#{@encodeURI(issueBody)}"
 
   encodeURI: (str) ->
@@ -61,7 +61,7 @@ class NotificationIssue
 
   getIssueTitle: ->
     title = @notification.getMessage()
-    title = title.replace(process.env.ATOM_HOME, '$ATOM_HOME')
+    title = title.replace(process.env.SOLDAT_HOME, '$SOLDAT_HOME')
     if process.platform is 'win32'
       title = title.replace(process.env.USERPROFILE, '~')
       title = title.replace(path.sep, path.posix.sep) # Standardize issue titles
@@ -85,7 +85,7 @@ class NotificationIssue
         options = @notification.getOptions()
         repoUrl = @getRepoUrl()
         packageName = @getPackageName()
-        packageVersion = atom.packages.getLoadedPackage(packageName)?.metadata?.version if packageName?
+        packageVersion = soldat.packages.getLoadedPackage(packageName)?.metadata?.version if packageName?
         copyText = ''
         systemUser = process.env.USER
         rootUserStatus = ''
@@ -117,7 +117,7 @@ class NotificationIssue
           1. ...
           2. ...
 
-          **Atom**: #{atom.getVersion()} #{process.arch}
+          **Atom**: #{soldat.getVersion()} #{process.arch}
           **Electron**: #{process.versions.electron}
           **OS**: #{systemName}
           **Thrown From**: #{packageMessage}
@@ -162,10 +162,10 @@ class NotificationIssue
   getRepoUrl: ->
     packageName = @getPackageName()
     return unless packageName?
-    repo = atom.packages.getLoadedPackage(packageName)?.metadata?.repository
+    repo = soldat.packages.getLoadedPackage(packageName)?.metadata?.repository
     repoUrl = repo?.url ? repo
     unless repoUrl
-      if packagePath = atom.packages.resolvePackagePath(packageName)
+      if packagePath = soldat.packages.resolvePackagePath(packageName)
         try
           repo = JSON.parse(fs.readFileSync(path.join(packagePath, 'package.json')))?.repository
           repoUrl = repo?.url ? repo
@@ -175,16 +175,16 @@ class NotificationIssue
   getPackageNameFromFilePath: (filePath) ->
     return unless filePath
 
-    packageName = /\/\.atom\/dev\/packages\/([^\/]+)\//.exec(filePath)?[1]
+    packageName = /\/\.soldat\/dev\/packages\/([^\/]+)\//.exec(filePath)?[1]
     return packageName if packageName
 
-    packageName = /\\\.atom\\dev\\packages\\([^\\]+)\\/.exec(filePath)?[1]
+    packageName = /\\\.soldat\\dev\\packages\\([^\\]+)\\/.exec(filePath)?[1]
     return packageName if packageName
 
-    packageName = /\/\.atom\/packages\/([^\/]+)\//.exec(filePath)?[1]
+    packageName = /\/\.soldat\/packages\/([^\/]+)\//.exec(filePath)?[1]
     return packageName if packageName
 
-    packageName = /\\\.atom\\packages\\([^\\]+)\\/.exec(filePath)?[1]
+    packageName = /\\\.soldat\\packages\\([^\\]+)\\/.exec(filePath)?[1]
     return packageName if packageName
 
   getPackageName: ->
@@ -195,7 +195,7 @@ class NotificationIssue
 
     packagePaths = @getPackagePathsByPackageName()
     for packageName, packagePath of packagePaths
-      if packagePath.indexOf(path.join('.atom', 'dev', 'packages')) > -1 or packagePath.indexOf(path.join('.atom', 'packages')) > -1
+      if packagePath.indexOf(path.join('.soldat', 'dev', 'packages')) > -1 or packagePath.indexOf(path.join('.soldat', 'packages')) > -1
         packagePaths[packageName] = fs.realpathSync(packagePath)
 
     getPackageName = (filePath) =>
@@ -231,6 +231,6 @@ class NotificationIssue
 
   getPackagePathsByPackageName: ->
     packagePathsByPackageName = {}
-    for pack in atom.packages.getLoadedPackages()
+    for pack in soldat.packages.getLoadedPackages()
       packagePathsByPackageName[pack.name] = pack.path
     packagePathsByPackageName

@@ -52,7 +52,7 @@ class NotificationElement
     @buttonListTemplate = TemplateHelper.create(ButtonListTemplate)
     @buttonTemplate = TemplateHelper.create(ButtonTemplate)
 
-    @element = document.createElement('atom-notification')
+    @element = document.createElement('soldat-notification')
     @issue = new NotificationIssue(@model) if @model.getType() is 'fatal'
     @renderPromise = @render().catch (e) ->
       console.error e.message
@@ -149,11 +149,11 @@ class NotificationElement
     issueButton = fatalContainer.querySelector('.btn-issue')
 
     copyReportButton = fatalContainer.querySelector('.btn-copy-report')
-    atom.tooltips.add(copyReportButton, title: copyReportButton.getAttribute('title'))
+    soldat.tooltips.add(copyReportButton, title: copyReportButton.getAttribute('title'))
     copyReportButton.addEventListener 'click', (e) =>
       e.preventDefault()
       @issue.getIssueBody().then (issueBody) ->
-        atom.clipboard.write(issueBody)
+        soldat.clipboard.write(issueBody)
 
     if packageName? and repoUrl?
       fatalNotification.innerHTML = "The error was thrown from the <a href=\"#{repoUrl}\">#{packageName} package</a>. "
@@ -163,12 +163,12 @@ class NotificationElement
     else
       fatalNotification.textContent = "This is likely a bug in Atom. "
 
-    # We only show the create issue button if it's clearly in atom core or in a package with a repo url
+    # We only show the create issue button if it's clearly in soldat core or in a package with a repo url
     if issueButton.parentNode?
       if packageName? and repoUrl?
         issueButton.textContent = "Create issue on the #{packageName} package"
       else
-        issueButton.textContent = "Create issue on atom/atom"
+        issueButton.textContent = "Create issue on soldat/soldat"
 
       promises = []
       promises.push @issue.findSimilarIssues()
@@ -176,7 +176,7 @@ class NotificationElement
       promises.push UserUtilities.checkPackageUpToDate(packageName) if packageName?
 
       Promise.all(promises).then (allData) =>
-        [issues, atomCheck, packageCheck] = allData
+        [issues, soldatCheck, packageCheck] = allData
 
         if issues?.open or issues?.closed
           issue = issues.open or issues.closed
@@ -189,7 +189,7 @@ class NotificationElement
           issueButton.addEventListener 'click', (e) ->
             e.preventDefault()
             command = 'settings-view:check-for-package-updates'
-            atom.commands.dispatch(atom.views.getView(atom.workspace), command)
+            soldat.commands.dispatch(soldat.views.getView(soldat.workspace), command)
 
           fatalNotification.innerHTML += """
             <code>#{packageName}</code> is out of date: #{packageCheck.installedVersion} installed;
@@ -206,19 +206,19 @@ class NotificationElement
             Removing the locally installed version may fix this issue.
           """
 
-          packagePath = atom.packages.getLoadedPackage(packageName)?.path
+          packagePath = soldat.packages.getLoadedPackage(packageName)?.path
           if fs.isSymbolicLinkSync(packagePath)
             fatalNotification.innerHTML += """
             <br><br>
             Use: <code>apm unlink #{packagePath}</code>
           """
-        else if atomCheck? and not atomCheck.upToDate
+        else if soldatCheck? and not soldatCheck.upToDate
           issueButton.remove()
 
           fatalNotification.innerHTML += """
-            Atom is out of date: #{atomCheck.installedVersion} installed;
-            #{atomCheck.latestVersion} latest.
-            Upgrading to the <a href='https://github.com/atom/atom/releases/tag/v#{atomCheck.latestVersion}'>latest version</a> may fix this issue.
+            Atom is out of date: #{soldatCheck.installedVersion} installed;
+            #{soldatCheck.latestVersion} latest.
+            Upgrading to the <a href='https://github.com/soldat/soldat/releases/tag/v#{soldatCheck.latestVersion}'>latest version</a> may fix this issue.
           """
         else
           fatalNotification.innerHTML += " You can help by creating an issue. Please explain what actions triggered this error."
@@ -241,7 +241,7 @@ class NotificationElement
     @model.dismiss()
 
   handleRemoveAllNotificationsClick: ->
-    notifications = atom.notifications.getNotifications()
+    notifications = soldat.notifications.getNotifications()
     for notification in notifications
       if notification.isDismissable() and not notification.isDismissed()
         notification.dismiss()
@@ -263,7 +263,7 @@ class NotificationElement
     , @visibilityDuration
 
   removeNotificationAfterTimeout: ->
-    atom.workspace.getActivePane().activate() if @element is document.activeElement
+    soldat.workspace.getActivePane().activate() if @element is document.activeElement
 
     setTimeout =>
       @element.remove()
