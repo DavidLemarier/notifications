@@ -295,12 +295,12 @@ describe "Notifications", ->
         beforeEach ->
           stack = """
             TypeError: undefined is not a function
-              at Object.module.exports.Pane.promptToSaveItem [as defaultSavePrompt] (/Applications/Atom.app/Contents/Resources/app/src/pane.js:490:23)
+              at Object.module.exports.Pane.promptToSaveItem [as defaultSavePrompt] (/Applications/Soldat.app/Contents/Resources/app/src/pane.js:490:23)
               at Pane.promptToSaveItem (/Users/someguy/.soldat/packages/save-session/lib/save-prompt.coffee:21:15)
-              at Pane.module.exports.Pane.destroyItem (/Applications/Atom.app/Contents/Resources/app/src/pane.js:442:18)
-              at HTMLDivElement.<anonymous> (/Applications/Atom.app/Contents/Resources/app/node_modules/tabs/lib/tab-bar-view.js:174:22)
-              at space-pen-ul.jQuery.event.dispatch (/Applications/Atom.app/Contents/Resources/app/node_modules/archive-view/node_modules/soldat-space-pen-views/node_modules/space-pen/vendor/jquery.js:4676:9)
-              at space-pen-ul.elemData.handle (/Applications/Atom.app/Contents/Resources/app/node_modules/archive-view/node_modules/soldat-space-pen-views/node_modules/space-pen/vendor/jquery.js:4360:46)
+              at Pane.module.exports.Pane.destroyItem (/Applications/Soldat.app/Contents/Resources/app/src/pane.js:442:18)
+              at HTMLDivElement.<anonymous> (/Applications/Soldat.app/Contents/Resources/app/node_modules/tabs/lib/tab-bar-view.js:174:22)
+              at space-pen-ul.jQuery.event.dispatch (/Applications/Soldat.app/Contents/Resources/app/node_modules/archive-view/node_modules/soldat-space-pen-views/node_modules/space-pen/vendor/jquery.js:4676:9)
+              at space-pen-ul.elemData.handle (/Applications/Soldat.app/Contents/Resources/app/node_modules/archive-view/node_modules/soldat-space-pen-views/node_modules/space-pen/vendor/jquery.js:4360:46)
           """
           detail = 'ok'
 
@@ -311,7 +311,7 @@ describe "Notifications", ->
           spyOn(fs, 'realpathSync').andCallFake (p) -> p
           spyOn(fatalError.issue, 'getPackagePathsByPackageName').andCallFake ->
             'save-session': '/Users/someguy/.soldat/packages/save-session'
-            'tabs': '/Applications/Atom.app/Contents/Resources/app/node_modules/tabs'
+            'tabs': '/Applications/Soldat.app/Contents/Resources/app/node_modules/tabs'
 
         it "chooses the first package in the trace", ->
           expect(fatalError.issue.getPackageName()).toBe 'save-session'
@@ -337,18 +337,18 @@ describe "Notifications", ->
             expect(notificationContainer.childNodes.length).toBe 1
             expect(fatalError).toHaveClass 'has-close'
             expect(fatalError.innerHTML).toContain 'ReferenceError: a is not defined'
-            expect(fatalError.innerHTML).toContain "<a href=\"https://github.com/soldat/notifications\">notifications package</a>"
+            expect(fatalError.innerHTML).toContain "<a href=\"https://github.com/getsoldat/notifications\">notifications package</a>"
             expect(fatalError.issue.getPackageName()).toBe 'notifications'
 
             button = fatalError.querySelector('.btn')
             expect(button.textContent).toContain 'Create issue on the notifications package'
 
-            expect(issueTitle).toContain '$ATOM_HOME'
-            expect(issueTitle).not.toContain process.env.ATOM_HOME
-            expect(issueBody).toMatch /Atom\*\*: [0-9].[0-9]+.[0-9]+/ig
+            expect(issueTitle).toContain '$SOLDAT_HOME'
+            expect(issueTitle).not.toContain process.env.SOLDAT_HOME
+            expect(issueBody).toMatch /Soldat\*\*: [0-9].[0-9]+.[0-9]+/ig
             expect(issueBody).not.toMatch /Unknown/ig
             expect(issueBody).toContain 'ReferenceError: a is not defined'
-            expect(issueBody).toContain 'Thrown From**: [notifications](https://github.com/soldat/notifications) package '
+            expect(issueBody).toContain 'Thrown From**: [notifications](https://github.com/getsoldat/notifications) package '
             expect(issueBody).toContain '### Non-Core Packages'
             expect(issueBody).toContain '### Metadata'
             expect(issueBody).toContain '{\n  "foo": "bar"\n}'
@@ -371,7 +371,7 @@ describe "Notifications", ->
           spyOn(soldat, 'inDevMode').andReturn false
           generateFakeFetchResponses()
 
-          # Create a custom error message that contains the user profile but not ATOM_HOME
+          # Create a custom error message that contains the user profile but not SOLDAT_HOME
           try
             a + 1
           catch e
@@ -408,7 +408,7 @@ describe "Notifications", ->
             {
               "name": "linked-package",
               "version": "1.0.0",
-              "repository": "https://github.com/soldat/notifications"
+              "repository": "https://github.com/getsoldat/notifications"
             }
           """
           soldat.packages.enablePackage('linked-package')
@@ -417,9 +417,9 @@ describe "Notifications", ->
             ReferenceError: path is not defined
               at Object.module.exports.LinkedPackage.wow (#{path.join(fs.realpathSync(packageDir), 'linked-package.coffee')}:29:15)
               at soldat-workspace.subscriptions.add.soldat.commands.add.linked-package:wow (#{path.join(packageDir, 'linked-package.coffee')}:18:102)
-              at CommandRegistry.module.exports.CommandRegistry.handleCommandEvent (/Applications/Atom.app/Contents/Resources/app/src/command-registry.js:238:29)
-              at /Applications/Atom.app/Contents/Resources/app/src/command-registry.js:3:61
-              at CommandPaletteView.module.exports.CommandPaletteView.confirmed (/Applications/Atom.app/Contents/Resources/app/node_modules/command-palette/lib/command-palette-view.js:159:32)
+              at CommandRegistry.module.exports.CommandRegistry.handleCommandEvent (/Applications/Soldat.app/Contents/Resources/app/src/command-registry.js:238:29)
+              at /Applications/Soldat.app/Contents/Resources/app/src/command-registry.js:3:61
+              at CommandPaletteView.module.exports.CommandPaletteView.confirmed (/Applications/Soldat.app/Contents/Resources/app/node_modules/command-palette/lib/command-palette-view.js:159:32)
           """
           detail = "At #{path.join(packageDir, 'linked-package.coffee')}:41"
           message = "Uncaught ReferenceError: path is not defined"
@@ -435,7 +435,7 @@ describe "Notifications", ->
             expect(notificationContainer.childNodes.length).toBe 1
             expect(fatalError).toHaveClass 'has-close'
             expect(fatalError.innerHTML).toContain "Uncaught ReferenceError: path is not defined"
-            expect(fatalError.innerHTML).toContain "<a href=\"https://github.com/soldat/notifications\">linked-package package</a>"
+            expect(fatalError.innerHTML).toContain "<a href=\"https://github.com/getsoldat/notifications\">linked-package package</a>"
             expect(fatalError.issue.getPackageName()).toBe 'linked-package'
 
       describe "when an exception is thrown from an unloaded package", ->
@@ -451,7 +451,7 @@ describe "Notifications", ->
             {
               "name": "unloaded",
               "version": "1.0.0",
-              "repository": "https://github.com/soldat/notifications"
+              "repository": "https://github.com/getsoldat/notifications"
             }
           """
 
@@ -470,7 +470,7 @@ describe "Notifications", ->
             expect(notificationContainer.childNodes.length).toBe 1
             expect(fatalError).toHaveClass 'has-close'
             expect(fatalError.innerHTML).toContain 'ReferenceError: unloaded error'
-            expect(fatalError.innerHTML).toContain "<a href=\"https://github.com/soldat/notifications\">unloaded package</a>"
+            expect(fatalError.innerHTML).toContain "<a href=\"https://github.com/getsoldat/notifications\">unloaded package</a>"
             expect(fatalError.issue.getPackageName()).toBe 'unloaded'
 
       describe "when an exception is thrown from a package trying to load", ->
@@ -485,11 +485,11 @@ describe "Notifications", ->
             {
               "name": "broken-load",
               "version": "1.0.0",
-              "repository": "https://github.com/soldat/notifications"
+              "repository": "https://github.com/getsoldat/notifications"
             }
           """
 
-          stack = "TypeError: Cannot read property 'prototype' of undefined\n  at __extends (<anonymous>:1:1)\n  at Object.defineProperty.value [as .coffee] (/Applications/Atom.app/Contents/Resources/app.asar/src/compile-cache.js:169:21)"
+          stack = "TypeError: Cannot read property 'prototype' of undefined\n  at __extends (<anonymous>:1:1)\n  at Object.defineProperty.value [as .coffee] (/Applications/Soldat.app/Contents/Resources/app.asar/src/compile-cache.js:169:21)"
           detail = "TypeError: Cannot read property 'prototype' of undefined"
           message = "Failed to load the broken-load package"
           soldat.notifications.addFatalError(message, {stack, detail, packageName: 'broken-load', dismissable: true})
@@ -504,7 +504,7 @@ describe "Notifications", ->
             expect(notificationContainer.childNodes.length).toBe 1
             expect(fatalError).toHaveClass 'has-close'
             expect(fatalError.innerHTML).toContain "TypeError: Cannot read property 'prototype' of undefined"
-            expect(fatalError.innerHTML).toContain "<a href=\"https://github.com/soldat/notifications\">broken-load package</a>"
+            expect(fatalError.innerHTML).toContain "<a href=\"https://github.com/getsoldat/notifications\">broken-load package</a>"
             expect(fatalError.issue.getPackageName()).toBe 'broken-load'
 
       describe "when an exception is thrown from a package trying to load a grammar", ->
@@ -519,7 +519,7 @@ describe "Notifications", ->
             {
               "name": "language-broken-grammar",
               "version": "1.0.0",
-              "repository": "https://github.com/soldat/notifications"
+              "repository": "https://github.com/getsoldat/notifications"
             }
           """
 
@@ -551,7 +551,7 @@ describe "Notifications", ->
             expect(notificationContainer.childNodes.length).toBe 1
             expect(fatalError).toHaveClass 'has-close'
             expect(fatalError.innerHTML).toContain "Failed to load a language-broken-grammar package grammar"
-            expect(fatalError.innerHTML).toContain "<a href=\"https://github.com/soldat/notifications\">language-broken-grammar package</a>"
+            expect(fatalError.innerHTML).toContain "<a href=\"https://github.com/getsoldat/notifications\">language-broken-grammar package</a>"
             expect(fatalError.issue.getPackageName()).toBe 'language-broken-grammar'
 
       describe "when an exception is thrown from a package trying to activate", ->
@@ -566,11 +566,11 @@ describe "Notifications", ->
             {
               "name": "broken-activation",
               "version": "1.0.0",
-              "repository": "https://github.com/soldat/notifications"
+              "repository": "https://github.com/getsoldat/notifications"
             }
           """
 
-          stack = "TypeError: Cannot read property 'command' of undefined\n  at Object.module.exports.activate (<anonymous>:7:23)\n  at Package.module.exports.Package.activateNow (/Applications/Atom.app/Contents/Resources/app.asar/src/package.js:232:19)"
+          stack = "TypeError: Cannot read property 'command' of undefined\n  at Object.module.exports.activate (<anonymous>:7:23)\n  at Package.module.exports.Package.activateNow (/Applications/Soldat.app/Contents/Resources/app.asar/src/package.js:232:19)"
           detail = "TypeError: Cannot read property 'command' of undefined"
           message = "Failed to activate the broken-activation package"
           soldat.notifications.addFatalError(message, {stack, detail, packageName: 'broken-activation', dismissable: true})
@@ -585,7 +585,7 @@ describe "Notifications", ->
             expect(notificationContainer.childNodes.length).toBe 1
             expect(fatalError).toHaveClass 'has-close'
             expect(fatalError.innerHTML).toContain "TypeError: Cannot read property 'command' of undefined"
-            expect(fatalError.innerHTML).toContain "<a href=\"https://github.com/soldat/notifications\">broken-activation package</a>"
+            expect(fatalError.innerHTML).toContain "<a href=\"https://github.com/getsoldat/notifications\">broken-activation package</a>"
             expect(fatalError.issue.getPackageName()).toBe 'broken-activation'
 
       describe "when an exception is thrown from a package without a trace, but with a URL", ->
@@ -608,7 +608,7 @@ describe "Notifications", ->
 
           runs ->
             expect(fatalError.innerHTML).toContain 'ReferenceError: a is not defined'
-            expect(fatalError.innerHTML).toContain "<a href=\"https://github.com/soldat/notifications\">notifications package</a>"
+            expect(fatalError.innerHTML).toContain "<a href=\"https://github.com/getsoldat/notifications\">notifications package</a>"
             expect(fatalError.issue.getPackageName()).toBe 'notifications'
 
       describe "when an exception is thrown from core", ->
@@ -637,14 +637,14 @@ describe "Notifications", ->
           expect(fatalError).toBeDefined()
           expect(fatalError).toHaveClass 'has-close'
           expect(fatalError.innerHTML).toContain 'ReferenceError: a is not defined'
-          expect(fatalError.innerHTML).toContain 'bug in Atom'
+          expect(fatalError.innerHTML).toContain 'bug in Soldat'
           expect(fatalError.issue.getPackageName()).toBeUndefined()
 
           button = fatalError.querySelector('.btn')
           expect(button.textContent).toContain 'Create issue on soldat/soldat'
 
           expect(issueBody).toContain 'ReferenceError: a is not defined'
-          expect(issueBody).toContain '**Thrown From**: Atom Core'
+          expect(issueBody).toContain '**Thrown From**: Soldat Core'
 
         it "contains the commands that the user run in the issue body", ->
           expect(issueBody).toContain 'some-package:a-command'
@@ -681,7 +681,7 @@ describe "Notifications", ->
           spyOn(soldat, 'inDevMode').andReturn false
 
         describe "when the message is longer than 100 characters", ->
-          message = "Uncaught Error: Cannot find module 'dialog'Error: Cannot find module 'dialog' at Function.Module._resolveFilename (module.js:351:15) at Function.Module._load (module.js:293:25) at Module.require (module.js:380:17) at EventEmitter.<anonymous> (/Applications/Atom.app/Contents/Resources/soldat/browser/lib/rpc-server.js:128:79) at EventEmitter.emit (events.js:119:17) at EventEmitter.<anonymous> (/Applications/Atom.app/Contents/Resources/soldat/browser/api/lib/web-contents.js:99:23) at EventEmitter.emit (events.js:119:17)"
+          message = "Uncaught Error: Cannot find module 'dialog'Error: Cannot find module 'dialog' at Function.Module._resolveFilename (module.js:351:15) at Function.Module._load (module.js:293:25) at Module.require (module.js:380:17) at EventEmitter.<anonymous> (/Applications/Soldat.app/Contents/Resources/soldat/browser/lib/rpc-server.js:128:79) at EventEmitter.emit (events.js:119:17) at EventEmitter.<anonymous> (/Applications/Soldat.app/Contents/Resources/soldat/browser/api/lib/web-contents.js:99:23) at EventEmitter.emit (events.js:119:17)"
           expectedIssueTitle = "Uncaught Error: Cannot find module 'dialog'Error: Cannot find module 'dialog' at Function.Module...."
 
           beforeEach ->
@@ -758,14 +758,14 @@ describe "Notifications", ->
           beforeEach ->
             generateFakeFetchResponses
               packageResponse:
-                repository: url: 'https://github.com/soldat/notifications'
+                repository: url: 'https://github.com/getsoldat/notifications'
                 releases: latest: '0.11.0'
 
-          describe "when the locally installed version is lower than Atom's version", ->
+          describe "when the locally installed version is lower than Soldat's version", ->
             beforeEach ->
-              versionShippedWithAtom = '0.10.0'
+              versionShippedWithSoldat = '0.10.0'
               UserUtilities = require '../lib/user-utilities'
-              spyOn(UserUtilities, 'getPackageVersionShippedWithAtom').andCallFake -> versionShippedWithAtom
+              spyOn(UserUtilities, 'getPackageVersionShippedWithSoldat').andCallFake -> versionShippedWithSoldat
 
               generateException()
               fatalError = notificationContainer.querySelector('soldat-notification.fatal')
@@ -778,14 +778,14 @@ describe "Notifications", ->
 
             it "tells the user that the package is a locally installed core package and out of date", ->
               fatalNotification = fatalError.querySelector('.fatal-notification')
-              expect(fatalNotification.textContent).toContain 'Locally installed core Atom package'
+              expect(fatalNotification.textContent).toContain 'Locally installed core Soldat package'
               expect(fatalNotification.textContent).toContain 'is out of date'
 
-          describe "when the locally installed version matches Atom's version", ->
+          describe "when the locally installed version matches Soldat's version", ->
             beforeEach ->
-              versionShippedWithAtom = '0.9.0'
+              versionShippedWithSoldat = '0.9.0'
               UserUtilities = require '../lib/user-utilities'
-              spyOn(UserUtilities, 'getPackageVersionShippedWithAtom').andCallFake -> versionShippedWithAtom
+              spyOn(UserUtilities, 'getPackageVersionShippedWithSoldat').andCallFake -> versionShippedWithSoldat
 
               generateException()
               fatalError = notificationContainer.querySelector('soldat-notification.fatal')
@@ -797,7 +797,7 @@ describe "Notifications", ->
               button = fatalError.querySelector('.btn')
               expect(button.textContent).toContain 'Create issue'
 
-      describe "when Atom is out of date", ->
+      describe "when Soldat is out of date", ->
         beforeEach ->
           installedVersion = '0.179.0'
           spyOn(soldat, 'getVersion').andCallFake -> installedVersion
@@ -817,9 +817,9 @@ describe "Notifications", ->
           button = fatalError.querySelector('.btn-issue')
           expect(button).not.toExist()
 
-        it "tells the user that Atom is out of date", ->
+        it "tells the user that Soldat is out of date", ->
           fatalNotification = fatalError.querySelector('.fatal-notification')
-          expect(fatalNotification.textContent).toContain 'Atom is out of date'
+          expect(fatalNotification.textContent).toContain 'Soldat is out of date'
 
         it "provides a link to the latest released version", ->
           fatalNotification = fatalError.querySelector('.fatal-notification')
@@ -835,7 +835,7 @@ describe "Notifications", ->
               issuesResponse:
                 items: [
                   {
-                    title: 'ReferenceError: a is not defined in $ATOM_HOME/somewhere'
+                    title: 'ReferenceError: a is not defined in $SOLDAT_HOME/somewhere'
                     html_url: 'http://url.com/ok'
                     state: 'open'
                   }
@@ -851,7 +851,7 @@ describe "Notifications", ->
             expect(button.textContent).toContain 'View Issue'
             expect(button.getAttribute('href')).toBe 'http://url.com/ok'
             expect(fatalNotification.textContent).toContain 'already been reported'
-            expect(fetch.calls[0].args[0]).toContain encodeURIComponent('soldat/notifications')
+            expect(fetch.calls[0].args[0]).toContain encodeURIComponent('getsoldat/notifications')
 
         describe "when the issue is closed", ->
           beforeEach ->
@@ -859,7 +859,7 @@ describe "Notifications", ->
               issuesResponse:
                 items: [
                   {
-                    title: 'ReferenceError: a is not defined in $ATOM_HOME/somewhere'
+                    title: 'ReferenceError: a is not defined in $SOLDAT_HOME/somewhere'
                     html_url: 'http://url.com/closed'
                     state: 'closed'
                   }
@@ -906,7 +906,7 @@ describe "Notifications", ->
               a + 1
             catch e
               e.code = 'ENOENT'
-              message = 'Error: spawn /opt/soldat/Atom Helper (deleted) ENOENT'
+              message = 'Error: spawn /opt/soldat/Soldat Helper (deleted) ENOENT'
               window.onerror.call(window, message, 'abc', 2, 3, e)
 
           it "displays a fatal error", ->
@@ -919,7 +919,7 @@ generateException = ->
     a + 1
   catch e
     e.metadata = {foo: 'bar'}
-    errMsg = "#{e.toString()} in #{process.env.ATOM_HOME}/somewhere"
+    errMsg = "#{e.toString()} in #{process.env.SOLDAT_HOME}/somewhere"
     window.onerror.call(window, errMsg, '/dev/null', 2, 3, e)
 
 # shortenerResponse
@@ -932,7 +932,7 @@ generateFakeFetchResponses = (options) ->
 
     if url.indexOf('soldat.io/api/packages') > -1
       return jsonPromise(options?.packageResponse ? {
-        repository: url: 'https://github.com/soldat/notifications'
+        repository: url: 'https://github.com/getsoldat/notifications'
         releases: latest: '0.0.0'
       })
 
