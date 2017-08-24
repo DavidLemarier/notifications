@@ -15,7 +15,7 @@ class NotificationIssue
 
   findSimilarIssues: ->
     repoUrl = @getRepoUrl()
-    repoUrl = 'soldat/soldat' unless repoUrl?
+    repoUrl = 'getsoldat/soldat' unless repoUrl?
     repo = repoUrl.replace /http(s)?:\/\/(\d+\.)?github.com\//gi, ''
     issueTitle = @getIssueTitle()
     query = "#{issueTitle} repo:#{repo}"
@@ -53,7 +53,7 @@ class NotificationIssue
   getIssueUrl: ->
     @getIssueBody().then (issueBody) =>
       repoUrl = @getRepoUrl()
-      repoUrl = 'https://github.com/soldat/soldat' unless repoUrl?
+      repoUrl = 'https://github.com/getsoldat/soldat' unless repoUrl?
       "#{repoUrl}/issues/new?title=#{@encodeURI(@getIssueTitle())}&body=#{@encodeURI(issueBody)}"
 
   encodeURI: (str) ->
