@@ -210,7 +210,7 @@ class NotificationElement
           if fs.isSymbolicLinkSync(packagePath)
             fatalNotification.innerHTML += """
             <br><br>
-            Use: <code>apm unlink #{packagePath}</code>
+            Use: <code>recrue unlink #{packagePath}</code>
           """
         else if soldatCheck? and not soldatCheck.upToDate
           issueButton.remove()

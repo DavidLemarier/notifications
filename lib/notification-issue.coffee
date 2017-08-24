@@ -155,7 +155,7 @@ class NotificationIssue
   normalizePath: (path) ->
     path.replace('file:///', '')                         # Randomly inserted file url protocols
         .replace(/[/]/g, '\\')                           # Temp switch for Windows home matching
-        .replace(fs.getHomeDirectory(), '~')             # Remove users home dir for apm-dev'ed packages
+        .replace(fs.getHomeDirectory(), '~')             # Remove users home dir for recrue-dev'ed packages
         .replace(/\\/g, '/')                             # Switch \ back to / for everyone
         .replace(/.*(\/(app\.asar|packages\/).*)/, '$1') # Remove everything before app.asar or pacakges
 
